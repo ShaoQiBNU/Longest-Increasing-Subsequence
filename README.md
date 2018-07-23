@@ -70,12 +70,19 @@ class Stack {
 public:
     int getHeight(vector<vector<int> > actors, int n) {
         int maxCount = 1;
+        
         sort(actors.begin(),actors.end());
+        
         vector<int> dp(n, 1);
+        
         for (int i = 1; i < n; ++i)
         {
             for (int j = 0; j < i; ++j)
-                if (actors[j][0] < actors[i][0] && actors[j][1] < actors[i][1]) dp[i] = max(dp[i], dp[j] + 1);
+            {   
+                // 注意：身高相同但体重不同的人无法摞在一起
+                if (actors[j][0] < actors[i][0] && actors[j][1] < actors[i][1])
+                    dp[i] = max(dp[i], dp[j] + 1);
+            }
             maxCount = max(maxCount, dp[i]);
         }
  
