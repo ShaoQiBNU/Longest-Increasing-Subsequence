@@ -134,9 +134,70 @@ dp:  1  2  4  5
 
 ```
 
-**注意： 这个 1,2,4,5 不是LIS字符串，比如本题例的LIS应该是1,4,5,9/6，2代表的意思是存储2位长度LIS的最小末尾是2， 所以我们的dp数组，是存储对应长度LIS的最小末尾。有了这个末尾，我们就可以一个一个地插入数据。虽然最后一个A[8] = 7更新进去对于这组数据没有什么意义，但是如果后面再出现两个数字 8 和 9，那么就可以把8更新到B[4], 9更新到B[5]，得出LIS的长度为6。 **
+**注意： 这个 1,2,4,5 不是LIS字符串，比如本题例的LIS应该是1,4,5,9/6，2代表的意思是存储2位长度LIS的最小末尾是2， dp数组是存储对应长度LIS的最小末尾。有了这个末尾，我们就可以一个一个地插入数据。代码如下：**
 
+```java
+import java.util.*;
 
+public class Stack {
+    public static void main(String []args){
+
+        int[] arr={3,1,4,1,5,9,2,6,5};
+
+        int res=lengtdpOfLIS(arr);
+
+        System.out.println(res);
+    }
+    
+    // 寻找最长上升子串的长度
+	public static int lengtdpOfLIS(int[] arr) {
+        
+        if(arr==null||arr.length==0)
+            return 0;
+        
+        int[] dp = new int[arr.length];
+        
+        dp[0]=arr[0];
+
+        int max=0;//最长子序列最右边的位置
+        
+        // 循环arr
+        for(int i=1; i<arr.length; i++){
+            
+            // 插入dp末尾
+            if(arr[i]>dp[max]){
+                dp[++max]=arr[i];
+            }
+            
+            // 寻找位置，替换
+            else{
+                
+                int pos=findFirstBigger(dp,0,max,arr[i]);
+                dp[pos]=arr[i];
+            }
+        }
+		
+        return max+1;
+    }
+    
+    // 二分查找寻找位置
+    public static int findFirstBigger(int[] dp, int left, int right, int target){
+        
+        if(left==right)
+            return left;
+        
+        int mid=(left+right)/2;
+        
+        if(dp[mid]<target)
+            
+            return findFirstBigger(dp, mid+1, right, target);
+        
+        else
+            
+            return findFirstBigger(dp, left, mid, target);
+    }
+}
+```
 
 # 三. 应用
 
